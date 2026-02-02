@@ -1,3 +1,45 @@
- name: Generate Questions
- on:
-   workflow_dispatch
+name: Generate Questions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          cd scrape
+          npm install
+
+      - name: Run scraper
+        run: |
+          cd scrape
+          node scraper.js
+
+      - name: Copy generated questions to root
+        run: |
+          cp scrape/intrebari.json intrebari.json
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add intrebari.json scrape/intrebari.json
+          git commit -m "Update questions" || echo "No changes to commit"
+          git push
+        continue-on-error: true 
