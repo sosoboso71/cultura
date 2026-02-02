@@ -40,11 +40,8 @@ Acum generează lista completă JSON cu ${NUM_QUESTIONS} elemente.
 `;
 
     const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2";
-
-    const url = `https://api-inference.huggingface.co/models/${encodeURIComponent(
-        HF_MODEL
-    )}`;
-
+    const url = `https://router.huggingface.co/hf-inference/models/${encodeURIComponent(HF_MODEL)}`;
+     
     let rawText = "";
 
     try {
