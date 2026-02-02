@@ -3,7 +3,7 @@
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"   # rulează la fiecare 6 ore
+    - cron: "0 */6 * * *"
 
 jobs:
   build:
