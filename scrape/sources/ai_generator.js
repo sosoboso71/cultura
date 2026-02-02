@@ -1,4 +1,4 @@
-// scrape/sources/ai_generator.js
+ // scrape/sources/ai_generator.js
 import fetch from "node-fetch";
 
 /**
@@ -8,7 +8,7 @@ import fetch from "node-fetch";
  * Returnează un array de obiecte:
  * { intrebare: string, raspuns: string }
  */
-export async function scrapeAI() {
+export async function generateQuestions() {
     console.log("AI: generare întrebări...");
 
     const NUM_QUESTIONS = 100;
@@ -36,23 +36,9 @@ Fiecare element trebuie să fie de forma:
   "raspuns": "text răspuns"
 }
 
-Exemplu de structură (doar structură, nu repeta aceste întrebări):
-
-[
-  {
-    "intrebare": "Care este capitala Franței?",
-    "raspuns": "Paris"
-  },
-  {
-    "intrebare": "Ce planetă este cunoscută ca Planeta Roșie?",
-    "raspuns": "Marte"
-  }
-]
-
 Acum generează lista completă JSON cu ${NUM_QUESTIONS} elemente.
 `;
 
-    // Poți schimba modelul dacă vrei altceva
     const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2";
 
     const url = `https://api-inference.huggingface.co/models/${encodeURIComponent(
@@ -66,7 +52,6 @@ Acum generează lista completă JSON cu ${NUM_QUESTIONS} elemente.
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-                // fără Authorization – folosim endpoint public
             },
             body: JSON.stringify({
                 inputs: prompt,
@@ -85,7 +70,6 @@ Acum generează lista completă JSON cu ${NUM_QUESTIONS} elemente.
 
         const data = await response.json();
 
-        // HuggingFace poate întoarce fie { generated_text }, fie array
         if (Array.isArray(data) && data.length > 0 && data[0].generated_text) {
             rawText = data[0].generated_text;
         } else if (typeof data === "string") {
@@ -98,7 +82,6 @@ Acum generează lista completă JSON cu ${NUM_QUESTIONS} elemente.
         return [];
     }
 
-    // Încercăm să extragem JSON-ul din text
     let jsonPart = rawText;
 
     const firstBracket = rawText.indexOf("[");
@@ -116,7 +99,6 @@ Acum generează lista completă JSON cu ${NUM_QUESTIONS} elemente.
         return [];
     }
 
-    // Normalizăm structura la { intrebare, raspuns }
     const result = parsed
         .filter(
             (item) =>
