@@ -7,8 +7,10 @@ async function run() {
   try {
     const questions = await generateQuestions();
 
+    // GitHub Actions rulează DEJA în folderul /scrape,
+    // deci fișierul trebuie scris direct aici:
     fs.writeFileSync(
-      "./scrape/intrebari.json",
+      "./intrebari.json",
       JSON.stringify(questions, null, 2),
       "utf8"
     );
