@@ -33,7 +33,7 @@
     "whatwg-encoding": "^3.1.1",
     "whatwg-mimetype": "^4.0.0",
     "openai": "^4.0.0"
-  }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
